@@ -6,7 +6,7 @@ namespace vmtranslator
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            new parser("FunctionCalls/FibonacciElement/Main.vm");
         }
     }
 }

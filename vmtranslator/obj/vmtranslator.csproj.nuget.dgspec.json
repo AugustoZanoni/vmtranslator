@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Augusto Zanoni\\source\\repos\\vmtranslator\\vmtranslator\\vmtranslator.csproj": {}
+    "C:\\Users\\Augusto Zanoni\\Documents\\GitHub\\VMtranslatorMe\\vmtranslator\\vmtranslator.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Augusto Zanoni\\source\\repos\\vmtranslator\\vmtranslator\\vmtranslator.csproj": {
+    "C:\\Users\\Augusto Zanoni\\Documents\\GitHub\\VMtranslatorMe\\vmtranslator\\vmtranslator.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Augusto Zanoni\\source\\repos\\vmtranslator\\vmtranslator\\vmtranslator.csproj",
+        "projectUniqueName": "C:\\Users\\Augusto Zanoni\\Documents\\GitHub\\VMtranslatorMe\\vmtranslator\\vmtranslator.csproj",
         "projectName": "vmtranslator",
-        "projectPath": "C:\\Users\\Augusto Zanoni\\source\\repos\\vmtranslator\\vmtranslator\\vmtranslator.csproj",
+        "projectPath": "C:\\Users\\Augusto Zanoni\\Documents\\GitHub\\VMtranslatorMe\\vmtranslator\\vmtranslator.csproj",
         "packagesPath": "C:\\Users\\Augusto Zanoni\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Augusto Zanoni\\source\\repos\\vmtranslator\\vmtranslator\\obj\\",
+        "outputPath": "C:\\Users\\Augusto Zanoni\\Documents\\GitHub\\VMtranslatorMe\\vmtranslator\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\"

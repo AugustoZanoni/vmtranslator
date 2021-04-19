@@ -8,6 +8,8 @@ namespace vmtranslator
     class parser
     {
         string VALID_NAME_RE = "[a-zA-Z][\\w\\.:_]*";
+        string line;
+        int lineindex = 0;
         public parser(string fname)
         {
             {
@@ -15,7 +17,11 @@ namespace vmtranslator
                 {
                     using (var sr = new StreamReader(fname))
                     {
-
+                        while ((line = sr.ReadLine()) != null)
+                        {
+                            System.Console.WriteLine(line);
+                            lineindex++;
+                        }
                     }
                 }
                 catch (IOException e)
