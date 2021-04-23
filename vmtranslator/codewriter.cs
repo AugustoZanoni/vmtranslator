@@ -30,6 +30,16 @@ namespace vmtranslator
             "@SP",
             "M=M+1",
         };
+
+        static readonly int TEMP_BASE_ADDR = 5; // endereço fixo para memoria temporária
+
+        static readonly string
+            local = "LCL",
+            argument= "ARG",
+            THIS= "THIS",
+            THAT= "THAT";
+
+        Dictionary<string,int> labels = new Dictionary<string, int>(){};
         #endregion
 
         #region constructor
@@ -60,6 +70,15 @@ namespace vmtranslator
             }
 
             return asm;
+        }
+        public string genReturnLabel(string functionName)
+        {
+            int label = 0;
+            if (labels.TryGetValue(functionName, out label))
+               labels[functionName] = label + 1;
+            else
+                labels.Add(functionName,label+1);            
+            return $"{functionName}$ret.${labels[functionName]}";
         }
         public void writeInit()
         {

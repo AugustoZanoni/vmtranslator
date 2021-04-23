@@ -1,0 +1,4 @@
+
+*.v2
+.vs/vmtranslator/v16/.suo
+vmtranslator/obj/Debug/netcoreapp3.1/vmtranslator.csprojAssemblyReference.cache
