@@ -4,3 +4,5 @@ vmtranslator/obj/
 bin/
 *.v2
 .vs/vmtranslator/v16/.suo
+*.user
+*.pubxml
