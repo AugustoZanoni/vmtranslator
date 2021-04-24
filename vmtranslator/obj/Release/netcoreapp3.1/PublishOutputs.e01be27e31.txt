@@ -1,5 +1,0 @@
-C:\Users\Augusto Zanoni\source\repos\vmtranslator\vmtranslator\bin\Release\netcoreapp3.1\publish\vmtranslator.exe
-C:\Users\Augusto Zanoni\source\repos\vmtranslator\vmtranslator\bin\Release\netcoreapp3.1\publish\vmtranslator.dll
-C:\Users\Augusto Zanoni\source\repos\vmtranslator\vmtranslator\bin\Release\netcoreapp3.1\publish\vmtranslator.deps.json
-C:\Users\Augusto Zanoni\source\repos\vmtranslator\vmtranslator\bin\Release\netcoreapp3.1\publish\vmtranslator.runtimeconfig.json
-C:\Users\Augusto Zanoni\source\repos\vmtranslator\vmtranslator\bin\Release\netcoreapp3.1\publish\vmtranslator.pdb
