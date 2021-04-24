@@ -12,8 +12,9 @@ namespace vmtranslator
                 Console.WriteLine(file);
                 parser ps = new parser(file);
                 codewriter cw = new codewriter(file);
+                ps.avance();
                 while (ps.hasmorecommands()) { 
-                    ps.avance(); 
+                     
                     //Console.WriteLine(ps.line);
                     var command = ps.commandtype();
                     var arg1 = ps.arg1();
@@ -49,8 +50,10 @@ namespace vmtranslator
                         default:
                             Console.WriteLine("Unknown command in CodeWriter");
                             break;
-                    }                    
+                    }
+                    ps.avance();
                 }
+                cw.close();
             }
             //parser ps = new parser(args[0]);
             //while (ps.hasmorecommands()) { ps.avance(); Console.WriteLine(ps.line); }

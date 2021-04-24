@@ -55,32 +55,32 @@ namespace vmtranslator
         public string commandtype()
         {            
             dynamic c = commands;
-            string pop = @"/^pop\s+\w+\s+\d+$/";
-            string push = @"/^push\s+\w+\s+\d+$/";
-            string arithLogic = @"/^(add|sub|neg|eq|gt|lt|and|or|not)$/";
-            string label = $"^label\\s+${ VALID_NAME_RE}$";
-            string Goto = $"^goto\\s+${VALID_NAME_RE}$";
-            string ifgoto = $"^if-goto\\s+${VALID_NAME_RE}$";
-            string func = $"^function\\s+${VALID_NAME_RE}\\s+\\d +$";
-            string call = $"^call\\s+${VALID_NAME_RE}\\s+\\d+$";
+            Regex pop = new Regex(@"^pop\s+\w+\s+\d+$");
+            Regex push = new Regex(@"^push\s+\w+\s+\d+$");
+            Regex arithLogic = new Regex(@"^(add|sub|neg|eq|gt|lt|and|or|not)$");
+            Regex label = new Regex($@"^label\s+{ VALID_NAME_RE}$");
+            Regex Goto = new Regex($@"^goto\s+{VALID_NAME_RE}$");
+            Regex ifgoto = new Regex($@"^if-goto\s+{VALID_NAME_RE}$");
+            Regex func = new Regex($@"^function\s{VALID_NAME_RE}\s+\d+$");
+            Regex call = new Regex($@"^call\s+{VALID_NAME_RE}\s+\d+$");
 
-            if (Regex.IsMatch(line,pop))                         
+            if (pop.IsMatch(line))                         
                 command = c.C_POP;
-            else if (Regex.IsMatch(line, push))            
+            else if (push.IsMatch(line))            
                 command = c.C_PUSH;            
-            else if (Regex.IsMatch(line, arithLogic))            
+            else if (arithLogic.IsMatch(line))            
                 command = c.C_ARITHMETIC;            
-            else if (Regex.IsMatch(line, label))            
+            else if (label.IsMatch(line))            
                 command = c.C_LABEL;            
-            else if (Regex.IsMatch(line, Goto))            
+            else if (Goto.IsMatch(line))            
                 command = c.C_GOTO;            
-            else if (Regex.IsMatch(line, ifgoto))            
+            else if (ifgoto.IsMatch(line))            
                 command = c.C_IF;            
-            else if (Regex.IsMatch(line, func))            
+            else if (func.IsMatch(line))            
                 command = c.C_FUNCTION;            
             else if (line == "return")            
                 command = c.C_RETURN;            
-            else if (Regex.IsMatch(line, call))            
+            else if (call.IsMatch(line))            
                 command = c.C_CALL;            
             else            
                 throw new Exception($"Unknown command or invalid command syntax on line $ lineindex : $ line ");            
@@ -116,7 +116,7 @@ namespace vmtranslator
                 case "C_IF":
                 case "C_FUNCTION":
                 case "C_CALL":
-                    return Regex.Split(line, @"/\s+/")[1];//line.Split("/\s+/")[1];
+                    return Regex.Split(line, @"\s+")[1];//line.Split("/\s+/")[1];
             }
             return null;
         }
@@ -129,7 +129,7 @@ namespace vmtranslator
                 case "C_POP":
                 case "C_CALL":
                 case "C_FUNCTION":
-                    return Regex.Split(line, @"/\s+/")[2];//line.Split("/\s+/")[1];
+                    return Regex.Split(line, @"\s+")[2];//line.Split("/\s+/")[1];
 
             }
             return null;
