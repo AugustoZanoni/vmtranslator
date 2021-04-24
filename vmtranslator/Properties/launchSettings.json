@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "vmtranslator": {
-      "commandName": "Project",
-      "commandLineArgs": "FunctionCalls/FibonacciElement/Main.vm"
-    }
-  }
-}
