@@ -78,7 +78,7 @@ namespace vmtranslator
             if (offset.HasValue)
             {
                 string[] offsetasm = {
-                    $"@{ offset}",
+                    $"@{offset}",
                     "A=D+A",
                     "D=M",
                 };
@@ -133,15 +133,7 @@ namespace vmtranslator
                         "A=M",
                         (setD?"D=M":"") 
                     };
-                }
-                
-                string[] push = {
-                  "@SP",
-                  "A=M",
-                  "M=D",
-                  "@SP",
-                  "M=M+1"
-                };
+                }               
 
                 string[] compare(string command, string _labelId)
                 { // compares M with D

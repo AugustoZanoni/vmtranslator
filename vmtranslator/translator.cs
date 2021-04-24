@@ -12,6 +12,13 @@ namespace vmtranslator
                 Console.WriteLine(file);
                 parser ps = new parser(file);
                 codewriter cw = new codewriter(file);
+                if (args.Length > 1)
+                    if (args[1] != "nobootstrap") cw.writeInit();
+                    else;
+                else
+                    cw.writeInit();
+
+
                 ps.avance();
                 while (ps.hasmorecommands()) { 
                      
