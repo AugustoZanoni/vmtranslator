@@ -20,6 +20,7 @@ namespace vmtranslator
             {
                 Console.WriteLine(file);
                 parser ps = new parser(file);
+                cw.setfilename(file);
                                
                 ps.avance();
                 while (ps.hasmorecommands()) { 

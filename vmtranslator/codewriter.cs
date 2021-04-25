@@ -59,14 +59,17 @@ namespace vmtranslator
 
         #region constructor
         public codewriter(string fname)
-        {
-            this.className = Path.GetFileName(fname);
+        {           
             fname = fname.Replace(".vm", ".asm"); //.s .S .asm
             wr = File.CreateText(fname);            
         }
         #endregion
 
         #region methods      
+        public void setfilename(string fname)
+        {
+            this.className = Path.GetFileName(fname);
+        }
         public string[] setD(string baseAddr, int? offset = null)
         {
             string[] asm =
@@ -125,7 +128,7 @@ namespace vmtranslator
             {
                 wr.WriteLine($"// {command}");
 
-                string[] pop(bool setD = false)
+                string[] pop(bool setD = true)
                 {
                     return new string[] {  
                         "@SP",
@@ -381,14 +384,13 @@ namespace vmtranslator
             asm =
                 asm.Concat(setVarFromFrame(RETURN_ADDR, "5")) // RETURN_ADDR = END_FRAME - 5
                 .Concat(POP)
-                .Add($"D=A")
                 .Add("@ARG")
                 .Add("A=M")
                 .Add("M=D")                          // *ARG = *SP
                 .Add("@ARG")
                 .Add("D=M+1")
                 .Add("@SP")
-                .Add("M =D")                         // SP = ARG + 1
+                .Add("M=D")                         // SP = ARG + 1
                 .Concat(setVarFromFrame("THAT", "1"))    // THAT = *(END_FRAME - 1)
                 .Concat(setVarFromFrame("THIS", "2"))    // THIS = *(END_FRAME - 2)
                 .Concat(setVarFromFrame("ARG", "3"))     // ARG = *(END_FRAME - 3)
@@ -405,7 +407,7 @@ namespace vmtranslator
             {
                 return new String[] {
                         $"@{addr}",
-                        (Regex.IsMatch(addr, "/LCL|ARG|THIS|THAT/"))? "D=M" : "D=A",                        
+                        (Regex.IsMatch(addr, "LCL|ARG|THIS|THAT"))? "D=M" : "D=A",                        
                 }.Concat(PUSH);
             };
             int FRAME_SIZE = 5;            
@@ -416,7 +418,6 @@ namespace vmtranslator
             string[] asm =
                   pushval(RETURN_LABEL)
                   .Concat(pushval("LCL"))               // push return address
-                  .Concat(pushval("LCL")) // push local segment base address
                   .Concat(pushval("ARG")) // push arg segment base address
                   .Concat(pushval("THIS")) // push this segment base address
                   .Concat(pushval("THAT")) // push that segment base address
