@@ -82,7 +82,7 @@ namespace vmtranslator
                     "A=D+A",
                     "D=M",
                 };
-                asm = asm.Union(offsetasm).ToArray();   //or     //asm.Concat(offsetasm).Distinct().ToArray();
+                asm = asm.Concat(offsetasm);   //or     //asm.Concat(offsetasm).Distinct();
             }
 
             return asm;
@@ -155,41 +155,41 @@ namespace vmtranslator
                 if (command == "add")
                 {
                     asm = asm
-                        .Union(pop())
-                        .Union(pop(false))
-                        .Append("D=D+M")
-                        .Union(PUSH).ToArray();                
+                        .Concat(pop())
+                        .Concat(pop(false))
+                        .Add("D=D+M")
+                        .Concat(PUSH);                
                 }
                 else if (command == "sub")
                 {
                     asm = asm
-                        .Union(pop())
-                        .Union(pop(false))
-                        .Append("D=M-D")
-                        .Union(PUSH).ToArray();
+                        .Concat(pop())
+                        .Concat(pop(false))
+                        .Add("D=M-D")
+                        .Concat(PUSH);
                 }
                 else if (command == "eq" || command == "lt" || command == "gt")
                 {
                     asm = asm
-                        .Union(pop())
-                        .Union(pop(false))
-                        .Union(compare(command, ""))
-                        .Union(PUSH).ToArray();       
+                        .Concat(pop())
+                        .Concat(pop(false))
+                        .Concat(compare(command, ""))
+                        .Concat(PUSH);       
                 }
                 else if (command == "neg" || command == "not")
                 {
                     asm = asm
-                        .Union(pop())
-                      .Append($"D={ (command == "neg" ? '-' : '!')}D")
-                      .Union(PUSH).ToArray();        
+                        .Concat(pop())
+                      .Add($"D={ (command == "neg" ? '-' : '!')}D")
+                      .Concat(PUSH);        
                 }
                 else if (command == "and" || command == "or")
                 {
                     asm = asm
-                        .Union(pop())
-                        .Union(pop(false))
-                        .Append($"D=D{(command == "and" ? '&' : '|')}M")
-                        .Union(PUSH).ToArray();         
+                        .Concat(pop())
+                        .Concat(pop(false))
+                        .Add($"D=D{(command == "and" ? '&' : '|')}M")
+                        .Concat(PUSH);         
                 }
 
                 writecode(asm);
@@ -211,33 +211,33 @@ namespace vmtranslator
                 {
                     if (segment == "constant")
                     {
-                        asm = asm.Union(
-                          setD(index.ToString())                                        
-                        ).Union(PUSH).ToArray();
+                        asm = asm.Concat(
+                          setD(index.ToString())
+                        ).Concat(PUSH);
                     }
                     else if (segment == "temp")
                     {
-                        asm = asm.Union(
+                        asm = asm.Concat(
                           setD(TEMP_BASE_ADDR.ToString(), index))
-                          .Union(PUSH).ToArray();                                      
+                          .Concat(PUSH);                                      
                     }
                     else if (segment == "pointer")
                     {
-                        asm = asm.Union(
+                        asm = asm.Concat(
                           setD(index == 0 ? "THIS" : "THAT"))
-                          .Union(PUSH).ToArray();
+                          .Concat(PUSH);
                     }
                     else if (segment == "static")
                     {
-                        asm = asm.Union(
+                        asm = asm.Concat(
                           setD($"{this.className}.{index}"))
-                          .Union(PUSH).ToArray();
+                          .Concat(PUSH);
                     }
                     else
                     {
-                        asm = asm.Union(
+                        asm = asm.Concat(
                           setD(SYMBOL[segment], index))
-                          .Union(PUSH).ToArray();
+                          .Concat(PUSH);
                     }
                 }
                 else if (command == "C_POP")
@@ -271,30 +271,30 @@ namespace vmtranslator
 
                     if (segment == "temp")
                     {
-                        asm = asm.Union(
+                        asm = asm.Concat(
                            addr(TEMP_BASE_ADDR.ToString(), index.ToString()))
-                          .Union(POP)
-                          .Union(addrPtr).ToArray();                        
+                          .Concat(POP)
+                          .Concat(addrPtr);                        
                     }
                     else if (segment == "pointer")
                     {
                         asm =
-                          asm.Union(POP)
-                          .Append($"@{(index == 0 ? "THIS" : "THAT")}")
-                          .Append("M=D").ToArray();
+                          asm.Concat(POP)
+                          .Add($"@{(index == 0 ? "THIS" : "THAT")}")
+                          .Add("M=D");
                     }
                     else if (segment == "static")
                     {
-                        asm = asm.Union(POP)
-                          .Append($"@{this.className}.{index}")
-                          .Append("M=D").ToArray();          
+                        asm = asm.Concat(POP)
+                          .Add($"@{this.className}.{index}")
+                          .Add("M=D");          
                     }
                     else
                     {
-                        asm = asm.Union(
+                        asm = asm.Concat(
                           addr(SYMBOL[segment], index.ToString()))
-                          .Union(POP)
-                          .Union(addrPtr).ToArray();
+                          .Concat(POP)
+                          .Concat(addrPtr);
                     }
                 }
                 writecode(asm);
@@ -346,7 +346,7 @@ namespace vmtranslator
                 numLocals--;
                 string[] asm =
                     setD("0")
-                    .Union(PUSH).ToArray();
+                    .Concat(PUSH);
                 writecode(asm);
             }
         }
@@ -379,23 +379,23 @@ namespace vmtranslator
                 };
 
             asm =
-                asm.Union(setVarFromFrame(RETURN_ADDR, "5")) // RETURN_ADDR = END_FRAME - 5
-                .Union(POP)
-                .Append($"D=A")
-                .Append("@ARG")
-                .Append("A=M")
-                .Append("M=D")                          // *ARG = *SP
-                .Append("@ARG")
-                .Append("D=M+1")
-                .Append("@SP")
-                .Append("M =D")                         // SP = ARG + 1
-                .Union(setVarFromFrame("THAT", "1"))    // THAT = *(END_FRAME - 1)
-                .Union(setVarFromFrame("THIS", "2"))    // THIS = *(END_FRAME - 2)
-                .Union(setVarFromFrame("ARG", "3"))     // ARG = *(END_FRAME - 3)
-                .Union(setVarFromFrame("LCL", "4"))     // LCL = *(END_FRAME - 4)
-                .Append($"@{RETURN_ADDR}")
-                .Append("A=M")
-                .Append("0;JMP").ToArray();
+                asm.Concat(setVarFromFrame(RETURN_ADDR, "5")) // RETURN_ADDR = END_FRAME - 5
+                .Concat(POP)
+                .Add($"D=A")
+                .Add("@ARG")
+                .Add("A=M")
+                .Add("M=D")                          // *ARG = *SP
+                .Add("@ARG")
+                .Add("D=M+1")
+                .Add("@SP")
+                .Add("M =D")                         // SP = ARG + 1
+                .Concat(setVarFromFrame("THAT", "1"))    // THAT = *(END_FRAME - 1)
+                .Concat(setVarFromFrame("THIS", "2"))    // THIS = *(END_FRAME - 2)
+                .Concat(setVarFromFrame("ARG", "3"))     // ARG = *(END_FRAME - 3)
+                .Concat(setVarFromFrame("LCL", "4"))     // LCL = *(END_FRAME - 4)
+                .Add($"@{RETURN_ADDR}")
+                .Add("A=M")
+                .Add("0;JMP");
 
             writecode(asm);
         }
@@ -406,7 +406,7 @@ namespace vmtranslator
                 return new String[] {
                         $"@{addr}",
                         (Regex.IsMatch(addr, "/LCL|ARG|THIS|THAT/"))? "D=M" : "D=A",                        
-                }.Union(PUSH).ToArray();
+                }.Concat(PUSH);
             };
             int FRAME_SIZE = 5;            
 
@@ -415,24 +415,24 @@ namespace vmtranslator
 
             string[] asm =
                   pushval(RETURN_LABEL)
-                  .Union(pushval("LCL"))               // push return address
-                  .Union(pushval("LCL")) // push local segment base address
-                  .Union(pushval("ARG")) // push arg segment base address
-                  .Union(pushval("THIS")) // push this segment base address
-                  .Union(pushval("THAT")) // push that segment base address
-                  .Append($"@{FRAME_SIZE + numargs}")
-                  .Append($"D=A")
-                  .Append($"@SP")
-                  .Append($"D=M-D")
-                  .Append($"@ARG")
-                  .Append($"M=D") // ARG = SP - 5 - numArgs
-                  .Append($"@SP")
-                  .Append($"D=M")
-                  .Append($"@LCL")
-                  .Append($"M=D") // LCL = SP
-                  .Append($"@{functionname}")
-                  .Append($"0;JMP") // goto functionName
-                  .Append($"({ RETURN_LABEL})").ToArray();
+                  .Concat(pushval("LCL"))               // push return address
+                  .Concat(pushval("LCL")) // push local segment base address
+                  .Concat(pushval("ARG")) // push arg segment base address
+                  .Concat(pushval("THIS")) // push this segment base address
+                  .Concat(pushval("THAT")) // push that segment base address
+                  .Add($"@{FRAME_SIZE + numargs}")
+                  .Add($"D=A")
+                  .Add($"@SP")
+                  .Add($"D=M-D")
+                  .Add($"@ARG")
+                  .Add($"M=D") // ARG = SP - 5 - numArgs
+                  .Add($"@SP")
+                  .Add($"D=M")
+                  .Add($"@LCL")
+                  .Add($"M=D") // LCL = SP
+                  .Add($"@{functionname}")
+                  .Add($"0;JMP") // goto functionName
+                  .Add($"({ RETURN_LABEL})");
             writecode(asm);
         }
         public void close()

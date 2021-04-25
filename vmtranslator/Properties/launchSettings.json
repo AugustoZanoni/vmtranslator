@@ -2,7 +2,7 @@
   "profiles": {
     "vmtranslator": {
       "commandName": "Project",
-      "commandLineArgs": "FunctionCalls/FibonacciElement/Main.vm nobootstrap"
+      "commandLineArgs": "MemoryAccess\\BasicTest nobootstrap"
     }
   }
 }

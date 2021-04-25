@@ -7,18 +7,20 @@ namespace vmtranslator
     {
         static void Main(string[] args)
         {
-            foreach (string file in folderfile(args[0]))
+            string outputfile;
+            string[] inputfiles = folderfile(args[0], out outputfile);
+            codewriter cw = new codewriter(outputfile);
+            if (args.Length > 1)
+                if (args[1] != "nobootstrap") cw.writeInit();
+                else;
+            else
+                cw.writeInit();
+
+            foreach (string file in inputfiles)
             {
                 Console.WriteLine(file);
                 parser ps = new parser(file);
-                codewriter cw = new codewriter(file);
-                if (args.Length > 1)
-                    if (args[1] != "nobootstrap") cw.writeInit();
-                    else;
-                else
-                    cw.writeInit();
-
-
+                               
                 ps.avance();
                 while (ps.hasmorecommands()) { 
                      
@@ -60,26 +62,32 @@ namespace vmtranslator
                     }
                     ps.avance();
                 }
-                cw.close();
+                
             }
+            cw.close();
             //parser ps = new parser(args[0]);
             //while (ps.hasmorecommands()) { ps.avance(); Console.WriteLine(ps.line); }
         }
 
-        static string[] folderfile(string path)
+        static string[] folderfile(string path, out string outputfile)
         {
             if (path == ".")
                 path = Environment.CurrentDirectory;
-            else if (path.EndsWith('/'))
-                path = Environment.CurrentDirectory + path;
             else
                 path = Environment.CurrentDirectory + "/" + path;
 
             string[] filesfound = { "" };
             if (path.EndsWith(".vm"))
+            {
                 filesfound[0] = path;
+                outputfile = path;
+            }
             else
-                filesfound = Directory.GetFiles(path,"*.vm");
+            {
+                if (!path.EndsWith('/')) path = path + '/';
+                outputfile = path + Path.GetFileName(Path.GetDirectoryName(path+'/')) + ".vm";//Path.GetDirectoryName(path) + ".vm";                 
+                filesfound = Directory.GetFiles(path, "*.vm");
+            }
             return filesfound;
         }
     }
